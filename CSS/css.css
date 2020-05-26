@@ -1,0 +1,185 @@
+body{
+  background: url(../img/obl.jpg)no-repeat center center fixed;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+	width: 100%;
+}
+/*
+Все шрифты сайта
+font-family: 'Amatic SC', cursive;
+font-family: 'Poiret One', cursive;
+font-family: 'Neucha', cursive;
+font-family: 'Press Start 2P', cursive;
+font-family: 'Pangolin', cursive;
+font-family: 'Rubik Mono One', sans-serif;
+font-family: 'Underdog', cursive;*/
+div{
+  display: block;
+}
+.top{
+	height: 70px;
+  min-height: 33px;
+  margin-right: 3%;
+  padding-top: 1%;
+	padding-bottom: 3%;
+  display: flex; /*Горизонтальное выравнивание*/
+	font-family: 'Underdog', cursive;
+	font-size: 16px;
+	position: relative;
+}
+.oboi{
+	padding: 20px;
+	font-family: 'Press Start 2P', cursive;
+	font-size: 28px;
+	margin-left: 6%;
+	color: #793c53;
+}
+.menu{
+  height: 50px;
+  width: 100%;
+  min-height: 33px;
+  margin: 0;
+  padding: 0;
+  background-color: #9c5872;
+  display: flex; /*Горизонтальное выравнивание*/
+  font-weight: bold;
+	font-family: 'Underdog', cursive;
+	font-size: 16px;
+}
+cat{
+  background-color: whitesmoke;
+  width: 20%;
+  min-width: 90px;
+  min-height: 16px;
+  display: block;
+  float: left;
+  position: relative;
+  margin: 10px;
+  text-align: center;
+  color: black;
+  padding: 5px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+a{
+  text-decoration: none;
+	color: black;
+} 
+.border2{
+  background-color: #eaacc5;
+  margin: 50px 1% 50px auto;
+  vertical-align: top;
+	font-family: 'Poiret One', cursive;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 30px;
+	border-radius: 20px;
+	overflow: hidden;
+	margin-left: 21%;
+	box-shadow: 0 0 0 2px rgba(138, 52, 82, 1);
+}
+.sidebar{
+	margin: 50px 1% 50px 1%;
+	background-color: #eaacc5;
+  padding: 30px; 
+  float: left;
+	border-radius: 20px;
+	font-family: 'Poiret One', cursive;
+	font-weight: bold;
+	width: 20%;
+	font-size: 1.7vw;
+	box-shadow: 0 0 0 2px rgba(138, 52, 82, 1);
+}
+.mava{
+	width: 2.5vw;
+	height: 2.5vw;
+	vertical-align: middle;
+} 
+.opis{
+	height: auto;
+  min-height: 33px;
+  padding-top: 1%;
+	padding-bottom: 3%;
+	font-family: 'Underdog', cursive;
+	font-size: 16px;
+	display: block;
+	vertical-align: top;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+bor2{
+	height: auto;
+	vertical-align: top;
+	z-index: 1;
+}
+.content {
+	padding: 20px 0 auto 0;
+	background-color: rgba(0, 10, 10, 0.0);
+	margin: 0 auto;
+	overflow: hidden;
+	font-family: 'Underdog', cursive;
+	font-size: 16px;
+	text-align: center;
+	padding-top: 50px;
+}
+.catalog-list {
+  width: 90%;
+  margin: 20px 40px 20px auto;
+}
+.product-list{
+	width: 233px;
+  text-align: center;
+	margin-bottom: 20px;
+  font-family: 'Poiret One', cursive;
+  transition: .3s ease-in;
+	font-weight: bold;
+}
+.catalog-list img {
+	margin-left: 10px;
+  display: block;
+  width: 233px;
+ 	height: 233px;
+}
+.button {
+  text-decoration: none;
+  display: inline-block;
+  padding: 0 12px;
+  background: #9c5872;
+  color: white;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 28px;
+  transition: .3s ease-in;
+	cursor: pointer;
+}
+.book-item {
+	display: inline-block;
+  width: 250px;
+  height: 356px;
+  text-align: center;
+  margin: 10px 20px;
+	padding: 10px 10px 10px 10px;
+  font-family: 'Poiret One', cursive;
+  transition: .3s ease-in;
+  background: #ec8fae;
+}
+.book-item img {
+	margin-left: 10px;
+  display: block;
+  width: 233px;
+ 	height: 233px;
+}
+.auth {
+	padding: 20px 0 20px 0;
+}
+.footer{
+  padding: 50px;
+  background-color: #9c5872;
+	font-family: 'Rubik Mono One', sans-serif;
+	font-size: 20px;
+	color: white;
+	border-radius: 10px 10px 0px 0px;
+	bottom: 0;
+  width: -webkit-fill-available;
+}
