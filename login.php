@@ -31,7 +31,7 @@
     <div class="menu"> <!--Меню-->
       <cat><a href="index.php">Главная</a></cat>
       <cat><a href="classic.php">Книги</a></cat>
-      <cat><a href="sostav.php">Красткое содержание</a></cat>
+      <cat><a href="sostav.php">Информация</a></cat>
 			<cat>
 			<?php
 				if (mySession_start())

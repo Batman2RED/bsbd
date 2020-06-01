@@ -25,7 +25,7 @@
     <div class="menu"> <!--Меню-->
       <cat><a href="index.php">Главная</a></cat>
       <cat><a href="classic.php">Книги</a></cat>
-      <cat><a href="sostav.php">Краткое содержание</a></cat>
+      <cat><a href="sostav.php">Информация</a></cat>
 			<cat>
 			<?php
 				if (mySession_start())
@@ -43,28 +43,30 @@
 					<table class="catalog-list">
 						<?php 
 
-							$sql = 'SELECT * FROM lib_list WHERE book_tittle = :book_tittle';
+							$sql = 'SELECT * FROM lib_list WHERE book_id = :book_id';
 							$stmt = $db->prepare($sql);
 
 							$view = $db->query("SELECT * FROM lib_book");
 
 							foreach ($view as $tittle)
 							{	
-								$stmt->execute([':book_tittle' => $tittle['book_tittle'] ]);
-								$structures = '';
+								$stmt->execute([':book_id' => $tittle['book_id'] ]);
+								$info = '';
 
     							while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 								{	
-									$structures = $structures.', '.$row['structure'];
+									$info = $info.', '.$row['info'];
+									$info = $info.'<br>'.$row['info2'];
 								}
 
-								$structures = ltrim($structures, ",");
+								$info = ltrim($info,  ",");
 
 								echo '<div class="lib-item">
 									  	<img src="'.$tittle['book_img'].'" height=20%>
 									  	<div class="product-composition">
 									  		<h3>'.$tittle['book_tittle'].'</h3>
-									  		<b>'.$structures.'</b>
+									  		<b>'.$info.'</b>
+									  		<b>'.$info2.'</b>								  									
 									  	</div>
 									  </div>';
 

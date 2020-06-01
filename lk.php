@@ -33,7 +33,7 @@
     <div class="menu"> <!--Меню-->
       <cat><a href="index.php">Главная</a></cat>
       <cat><a href="classic.php">Книги</a></cat>
-      <cat><a href="sostav.php">Краткое содержание</a></cat>
+      <cat><a href="sostav.php">Информация</a></cat>
 			<cat><a href="logout.php">Выйти</a></cat>
       <cat><a href="cart.php">Корзина</a></cat>
     </div>

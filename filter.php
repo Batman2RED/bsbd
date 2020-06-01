@@ -25,7 +25,7 @@
     <div class="menu"> <!--Меню-->
       <abc><a href="index.php">Главная</a></abc>
       <cat><a href="classic.php">Книги</a></cat>
-      <cat><a href="sostav.php">Краткое содержание</a></cat>
+      <cat><a href="sostav.php">Информация</a></cat>
 			<cat>
 			<?php
 				if (mySession_start())
