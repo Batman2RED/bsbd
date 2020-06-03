@@ -1,7 +1,7 @@
 <?php
 
 	$host = 'localhost';
-	$db_name = 'bsbd\_project';
+	$db_name = 'bsbd_project';
 	$db_user = 'bsbd_admin';
 	$db_pass = '123';
 

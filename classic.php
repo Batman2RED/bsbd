@@ -41,7 +41,7 @@
 				<div class="wrapper">
 					<table class="catalog-list">
 						<?php 
-							$result = $db->query("SELECT * FROM `lib_book`");
+							$result = $db->query("SELECT * FROM lib_book");
 							$items = '';
 							$count = $result->rowCount();
 							$price = '';
@@ -58,6 +58,8 @@
 								  </script>';  
 
 							$result = null;
+
+
 						?>
 
 					</table>

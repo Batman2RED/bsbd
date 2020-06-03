@@ -145,7 +145,7 @@ bor2{
   text-decoration: none;
   display: inline-block;
   padding: 0 12px;
-  background: #9c5872;
+  background: #ffd700;
   color: white;
   text-transform: uppercase;
   font-size: 12px;
@@ -153,18 +153,20 @@ bor2{
   transition: .3s ease-in;
 	cursor: pointer;
 }
-.book-item {
+.lib-item {
 	display: inline-block;
   width: 250px;
-  height: 356px;
+  height: 376px;
   text-align: center;
-  margin: 10px 20px;
+  margin-top: 50px;
+  margin-right: 145px;
+  
 	padding: 10px 10px 10px 10px;
   font-family: 'Poiret One', cursive;
   transition: .3s ease-in;
-  background: #ec8fae;
+  background: #ffd700;
 }
-.book-item img {
+.lib-item img {
 	margin-left: 10px;
   display: block;
   width: 233px;
