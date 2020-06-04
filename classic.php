@@ -46,16 +46,18 @@
 							$count = $result->rowCount();
 							$price = '';
 							$img = '';
+							$ids = '';
 							
 							while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-								$items = $items.', '.$row['book_tittle'];
+								$items = $items.'~'.$row['book_tittle'];
 								$price = $price.' '.$row['book_price'];
 								$img = $img.' '.$row['book_img'];
+								$ids = $ids.';'.$row['book_id'];
 							}
 
 							echo '<script type="text/javascript"> 
-								  	dishes_tbl("'.$count.'", "'.$items.'", "'.$price.' ", "'.$img.'"); 
-								  </script>';  
+								  	dishes_tbl("'.$count.'", "'.$items.'", "'.$price.' ", "'.$img.'", "'.$ids.'"); 
+								  </script>'; 
 
 							$result = null;
 

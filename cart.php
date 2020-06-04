@@ -12,7 +12,7 @@
 		if (isset($_COOKIE['SESSID'])) 
 		{	
 			// информация о книге
-			$sql = 'SELECT book_tittle, book_price FROM lib_book WHERE book_tittle = :view_id';
+			$sql = 'SELECT book_id, book_tittle, book_price FROM lib_book WHERE book_id = :view_id';
 			$params = [ ':view_id' => strval(trim($_GET['id'])) ];
 			$stmt = $db->prepare($sql);
 			$stmt->execute($params);
@@ -26,11 +26,11 @@
 				$stmt_acc->execute([':sess_id' => $_COOKIE['SESSID']]);
 				$acc = $stmt_acc->fetch(PDO::FETCH_OBJ);
 
-				// добавление пиццы в корзину
+				// добавление книги в корзину
 
-				$get_order = $db->prepare('SELECT * FROM lib_cart WHERE session_id = :sess_id AND acc_id = :acc_id AND book_tittle = :book_tittle');
+				$get_order = $db->prepare('SELECT * FROM lib_cart WHERE session_id = :sess_id AND acc_id = :acc_id AND book_id = :book_id');
 			
-				$get_order->execute([ ':sess_id' => $_COOKIE['SESSID'], ':acc_id' => $acc->acc_id, ':book_tittle' => $view->book_tittle ]);
+				$get_order->execute([ ':sess_id' => $_COOKIE['SESSID'], ':acc_id' => $acc->acc_id, ':book_id' => $view->book_id ]);
 				$order = $get_order->fetch(PDO::FETCH_OBJ);
 
 				if ($order)
@@ -40,22 +40,21 @@
 
 
 					$add_cart_sql = 'UPDATE lib_cart SET count = :new_count
-									 WHERE acc_id = :acc_id AND book_tittle = :book_tittle';
+									 WHERE acc_id = :acc_id AND book_id = :book_id';
 
 					$add_cart_params = [ 
 										 ':new_count' => $order->count + 1, 
 										 ':acc_id' => $acc->acc_id, 
-										 ':book_tittle' => $view->book_tittle
+										 ':book_id' => $view->book_id
 									   ];
 				}
 				else
 				{
-					$add_cart_sql = 'INSERT INTO lib_cart (session_id, price, count, book_tittle, acc_id) 
-								 	 VALUES (:sess_id, :price, :count, :book_tittle, :acc_id)';
+					$add_cart_sql = 'INSERT INTO lib_cart (session_id, count, book_id, acc_id) 
+								 	 VALUES (:sess_id, :count, :book_id, :acc_id)';
 					$add_cart_params = [ ':sess_id' => $_COOKIE['SESSID'], 
-										 ':price' => $view->book_price, 
 										 ':count' => 1, 
-										 ':book_tittle' => $view->book_tittle, 
+										 ':book_id' => $view->book_id, 
 										 ':acc_id' => $acc->acc_id
 									   ];
 				}
@@ -68,7 +67,7 @@
 
 	if (isset($_GET['action']) && $_GET['action']=="drop")
 	{
-		$sql = 'DELETE FROM lib_cart WHERE session_id = :sess_id AND book_tittle = :view_id';
+		$sql = 'DELETE FROM lib_cart WHERE session_id = :sess_id AND book_id = :view_id';
 		$params = [  'sess_id' => $_COOKIE['SESSID'],
 				     ':view_id' => strval(trim($_GET['id'])) 
 				  ];
@@ -165,7 +164,7 @@
 
         					<?php 
 
-								$sql = 'SELECT * FROM lib_cart WHERE session_id = :sess_id';
+								$sql = 'SELECT * FROM lib_cart c LEFT JOIN lib_book b ON c.book_id = b.book_id WHERE c.session_id = :sess_id';
         						$stmt = $db->prepare($sql);
         						$stmt->execute([ ':sess_id' => $_COOKIE['SESSID'] ]);
 
@@ -176,15 +175,15 @@
        
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) 
 								{
-									$totalprice += $row['price'] * $row['count'];
+									$totalprice += $row['book_price'] * $row['count'];
 							?>
 								<tr> 
         							<td><?php echo $row['book_tittle'] ?></td> 
         						    <td><?php echo $row['count'] ?></td>
-        							<td><?php echo $row['price'] ?> руб.</td> 
-        							<td><?php echo $row['price'] * $row['count'] ?> руб.</td> 
+        							<td><?php echo $row['book_price'] ?> руб.</td> 
+        							<td><?php echo $row['book_price'] * $row['count'] ?> руб.</td> 
         							<td> <a class="button" 
-        								    href="cart.php?page=cart&action=drop&id=<?php echo $row['book_tittle'] ?>">
+        								    href="cart.php?page=cart&action=drop&id=<?php echo $row['book_id'] ?>">
         									Убрать
         								 </a>  
         							</td>

@@ -93,7 +93,8 @@
 
 							<?php
 								$sql = 'SELECT * FROM lib_orders
-										INNER JOIN lib_cart ON lib_cart.order_id = lib_orders.order_id
+										LEFT JOIN lib_cart ON lib_cart.order_id = lib_orders.order_id
+										LEFT JOIN lib_book ON lib_book.book_id = lib_cart.book_id
 									   ';
 
 								$stmt = $db->query($sql);
@@ -101,6 +102,8 @@
 								$totalorder = array('id' => 0, 'price' => 0, 'status' => '');
 
 								while ($order = $stmt->fetch(PDO::FETCH_OBJ)) 
+								{
+								if($order->order_id != null)
 								{
 							?>		
 									<tr>
@@ -135,7 +138,7 @@
 
 										<td>
 											<?php
-												$totalorder['price'] = $order->price * $order->count;
+												$totalorder['price'] = $order->book_price * $order->count;
 												if ($totalorder['id'] != $order->order_id) 
 												{
 													echo $totalorder['price'].' руб.';
@@ -162,7 +165,7 @@
         												Изменить статус заказа
         											</a> 
         								
-										  <?php } ?>
+										  <?php }} ?>
 										
 										</td>
 									</tr>

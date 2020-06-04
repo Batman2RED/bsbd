@@ -128,7 +128,6 @@ bor2{
   margin: 20px 40px 20px auto;
 }
 .product-list{
-	width: 233px;
   text-align: center;
 	margin-bottom: 20px;
   font-family: 'Poiret One', cursive;
@@ -136,9 +135,8 @@ bor2{
 	font-weight: bold;
 }
 .catalog-list img {
-	margin-left: 10px;
+	margin: auto;
   display: block;
-  width: 233px;
  	height: 233px;
 }
 .button {
@@ -167,10 +165,11 @@ bor2{
   background: #ffd700;
 }
 .lib-item img {
-	margin-left: 10px;
-  display: block;
-  width: 233px;
- 	height: 233px;
+	margin: auto;
+	display: block;
+	height: auto;
+    max-width: 100%;
+    max-height: 60%;
 }
 .auth {
 	padding: 20px 0 20px 0;
