@@ -30,16 +30,68 @@ function dishes_tbl(count, book_tittle_list, book_price_list, book_img_list, boo
 	
 }
 
-function book_delete(id) {
-	$.ajax({
-		type: 'POST',
-		url: "book_controller.php",
-		data: {
-			"del": id
-		},
-		success: function (html) {
-			location.reload();
-			//$("#123").append(html);
-		}
+$(function () {
+	/*удаление книги из БД*/
+	$('.product-composition').on('click', '[act=del]', function (event) {
+		var book_id = $(this).attr('book_id');
+		//var approv = window.confirm("Удалить книгу?");
+		$('body').append('<div id="overlay"></div><div id="magnify" style="text-align: center; padding: 20px 15px;"><b>Удалить книгу №' + book_id +'?</b><br><br><input type="button" name="yes" value=Да> <input type="button" name="no" value=Нет><i></i></div></div>');
+
+		$('#magnify').css({
+			left: ($(document).width() - $('#magnify').outerWidth()) / 2,
+			top: ($(window).height() - $('#magnify').outerHeight()) / 4
+		});
+		$('#overlay, #magnify').fadeIn('fast');
+
+
+		$('#magnify').on('click', '[name=yes]', function (event) {
+			event.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: "book_controller.php",
+				data: {
+					"del": book_id
+				},
+				success: function (html) {
+					location.reload();
+				}
+			});
+
+			$('#overlay, #magnify').fadeOut('fast', function () {
+				$('#close-popup, #magnify, #overlay').remove();
+			});
+		});		
 	});
-}
+
+	/*Редактирование книги*/
+	$('.product-composition').on('click', '[act=edit]', function (event) {
+		var book_id = $(this).attr('book_id');
+		$('body').append('<div id="overlay"></div><div id="magnify"><div id="close-popup"><i></i></div></div>');
+
+		$.ajax({
+			type: 'POST',
+			url: "book_controller.php",
+			data: {
+				"edit": book_id
+			},
+			success: function (html) {
+				$("#magnify").append(html);
+				$('#magnify').css({
+					left: ($(document).width() - $('#magnify').outerWidth()) / 2,
+					top: ($(window).height() - $('#magnify').outerHeight()) / 4
+				});
+				$('#overlay, #magnify').fadeIn('fast');
+			}
+		});
+
+	});
+
+	$('body').on('click', '#close-popup, #overlay, [name=no]', function (event) {
+		event.preventDefault();
+
+		$('#overlay, #magnify').fadeOut('fast', function () {
+			$('#close-popup, #magnify, #overlay').remove();
+		});
+	});
+});

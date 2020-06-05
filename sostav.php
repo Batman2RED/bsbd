@@ -13,8 +13,9 @@
 		<link href="https://fonts.googleapis.com/css?family=Amatic+SC|Neucha|Pangolin|Poiret+One|Press+Start+2P|Rubik+Mono+One|Underdog&amp;subset=cyrillic" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-1.10.2.js"></script> <!--Подключение jQuery со скриптами-->
     <script type="text/javascript" src="js/jquery-ui-1.10.4.custom.min.js"></script>
-		<script src="js/it.js" language="javascript"></script>
+		<script type="text/javascript" src="js/it.js"></script>
 		<link rel="shortcut icon" href="img/log.png">
+	
   </head>
   <body>
 	<div class="container">
@@ -37,67 +38,67 @@
     </div>
 		
 
-<div class="content">
-				<div class="wrapper">
-					<table class="catalog-list">
-						<?php 
-							if(isset($_COOKIE['SESSID']))
-							{
-								$sql = 'SELECT * FROM lib_user 
-											INNER JOIN lib_accounts ON lib_accounts.user_id = lib_user.u_id 
-											INNER JOIN lib_session ON lib_session.acc_id = lib_accounts.acc_id 
-											INNER JOIN lib_availability ON lib_availability.acc_id = lib_accounts.acc_id
-											WHERE lib_session.session_id = :sess_id';
+	<div class="content">
+					<div class="wrapper">
+						<table class="catalog-list">
+							<?php 
+								if(isset($_COOKIE['SESSID']))
+								{
+									$sql = 'SELECT * FROM lib_user 
+												INNER JOIN lib_accounts ON lib_accounts.user_id = lib_user.u_id 
+												INNER JOIN lib_session ON lib_session.acc_id = lib_accounts.acc_id 
+												INNER JOIN lib_availability ON lib_availability.acc_id = lib_accounts.acc_id
+												WHERE lib_session.session_id = :sess_id';
 
-								$stmt = $db->prepare($sql);
- 								$stmt->execute([':sess_id' => $_COOKIE['SESSID']]);
- 								$user = $stmt->fetch(PDO::FETCH_OBJ);
-							}
-
-							$sql = 'SELECT * FROM lib_list WHERE book_id = :book_id';
-							$stmt = $db->prepare($sql);
-
-							$view = $db->query("SELECT * FROM lib_book");
-
-							foreach ($view as $tittle)
-							{	
-								$stmt->execute([':book_id' => $tittle['book_id'] ]);
-								$info = '';
-
-    							while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-								{	
-									$info = $info.', '.$row['info'];
-									$info = $info.'<br>'.$row['info2'];
+									$stmt = $db->prepare($sql);
+ 									$stmt->execute([':sess_id' => $_COOKIE['SESSID']]);
+ 									$user = $stmt->fetch(PDO::FETCH_OBJ);
 								}
 
-								$info = ltrim($info,  ",");
+								$sql = 'SELECT * FROM lib_authors WHERE book_id = :book_id';
+								$stmt = $db->prepare($sql);
 
-								echo('<div class="lib-item">
-									  	<img src="'.$tittle['book_img'].'" height=20%>
-									  	<div class="product-composition">
-									  		<h3>'.$tittle['book_tittle'].'</h3>
-									  		<b>'.$info.'</b>');
-										if(isset($user->u_role) && $user->u_role == 'admin')
- 										{
- 											echo('<br><br><b><a href=# style="color:red" onclick="book_delete('.  $tittle['book_id'] .')">Удалить</a></b>');
- 										}
+								$view = $db->query("SELECT * FROM lib_book");
 
-										echo('</div>
-									  </div>');
+								foreach ($view as $tittle)
+								{	
+									$stmt->execute([':book_id' => $tittle['book_id'] ]);
+									$info = '';
 
-							}
+    								while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+									{	
+										$info = $info.', '.$row['book_author'];
+									}
+									$info = $info.'<br>'.$tittle['book_publisher'];
+									$info = ltrim($info,  ",");
 
-							$sql = null;
-							$stmt = null;
-							$view = null;
-						?>
-					</table>
+									echo('<div class="lib-item">
+									  		<img src="'.$tittle['book_img'].'" height=20%>
+									  		<div class="product-composition">
+									  			<h3>'.$tittle['book_tittle'].'</h3>
+									  			<b>'.$info.'</b>');
+											if(isset($user->u_role) && $user->u_role == 'admin')
+ 											{
+ 												echo('<br><br><b><a style="color:red; cursor: pointer;" act="edit" book_id="'.  $tittle['book_id'] .'">Редактировать</a></b>
+													  <br><b><a href=# style="color:red" act="del" book_id="'.  $tittle['book_id'] .'">Удалить</a></b>');
+ 											}
+
+											echo('</div>
+										  </div>');
+
+								}
+
+								$sql = null;
+								$stmt = null;
+								$view = null;
+							?>
+						</table>
+					</div>
 				</div>
+	<div class="footer">
+			Lib <span>&copy; 2019</span><br>
+			<span>Бронирование книг: бесплатно.</span>
 			</div>
-<div class="footer">
-		Lib <span>&copy; 2019</span><br>
-		<span>Бронирование книг: бесплатно.</span>
-		</div>
-  </div>
+	  </div>
   </body>
 </html>
