@@ -25,10 +25,7 @@
 	}
 
 	if(isset($_POST['del']) && $is_admin){
-		$del_book_sql = 'DELETE FROM lib_book
-								WHERE book_id = :book_id; 
-						DELETE FROM lib_authors
-								WHERE book_id = :book_id;';
+		$del_book_sql = 'DELETE FROM lib_book WHERE book_id = :book_id;';
 
 		$stmt = $db->prepare($del_book_sql);
 		$stmt->execute([':book_id' => $_POST['del']]);
@@ -37,7 +34,7 @@
 
 	if(isset($_POST['edit']) && $is_admin){
 		$book_id = $_POST['edit'];
-		$stmt = $db->prepare("SELECT * FROM lib_book WHERE book_id = :book_id");
+		$stmt = $db->prepare("SELECT * FROM lib_book lb LEFT JOIN lib_publisher lp ON lb.publisher_id = lp.publisher_id WHERE book_id = :book_id");
 		$stmt->execute([':book_id' => $book_id]);
 		
 		$authors = '';
@@ -70,6 +67,10 @@
 								<td><input type="text" name="update_book[author]" placeholder="Через запятую" value="' . trim($authors, ' ,') . '"></td>
 							</tr>
 							<tr>
+								<td><b>Авторы: </b></td>
+								<td><input type="text" name="update_book[year]" placeholder="Через запятую" value="' . $row['book_year'] . '"></td>
+							</tr>
+							<tr>
 								<td><b>Издатель: </b></td>
 								<td><input type="text" name="update_book[publisher]" value="' . $row['book_publisher'] . '"></td>
 							</tr>
@@ -80,7 +81,8 @@
 								<td colspan="2" cellspacing="10"><input type="file" name="image" accept="image/jpeg"></td>
 							</tr>-->
 							<tr>
-								<td colspan="2"><input type="hidden" name="update_book[book_id]" value="' . $row['book_id'] . '"><br></td>
+								<td colspan="2"><input type="hidden" name="update_book[book_id]" value="' . $row['book_id'] . '">
+								<input type="hidden" name="update_book[publisher_id]" value="' . $row['publisher_id'] . '"><br></td>
 							</tr>
 							<tr>
 								<td></td>
@@ -98,20 +100,20 @@
 
 	if(isset($_POST['update_book']) && $is_admin){
 		$upd_book = $_POST['update_book'];
-		if(empty($upd_book['tittle']) || empty($upd_book['price']) || empty($upd_book['author']) || empty($upd_book['publisher'])){
+		if(empty($upd_book['tittle']) || empty($upd_book['price']) || empty($upd_book['author']) || empty($upd_book['year']) || empty($upd_book['publisher'])){
 			echo('<div style="color: red; text-align: center; background: yellow; padding: 8px; font-size: 18px;">Заполните все поля!</div>');
 			die();
 		}
 		else{
 
 			//Обновляем данные о книге:
-			$upd_book_sql = 'UPDATE lib_book SET book_tittle = :tittle, book_price = :price, book_publisher = :publisher 
+			$upd_book_sql = 'UPDATE lib_book SET book_tittle = :tittle, book_price = :price, book_year = :year
 								WHERE book_id = :book_id;';
 			
 			$upd_book_params = [ ':tittle' => $upd_book['tittle'], 
-									':price' => $upd_book['price'], 
-									':publisher' => $upd_book['publisher'],
-									':book_id' => $upd_book['book_id']
+									':price' => $upd_book['price'],
+									':book_id' => $upd_book['book_id'],
+									':year' => $upd_book['year']
 								];
 			$stmt = $db->prepare($upd_book_sql);
 			$stmt->execute($upd_book_params);
@@ -121,9 +123,6 @@
 			$stmt->execute([':book_id' => $upd_book['book_id']]);
 
 			$authors = explode(',', trim($upd_book['author']));
-			$upd_author_sql = 'UPDATE lib_authors book_author = :book_author
-								WHERE book_id = :book_id;';
-			$stmt = $db->prepare($upd_author_sql);
 
 			$add_author_sql = 'INSERT INTO lib_authors (book_id, book_author)
 								VALUES (:book_id, :book_author);';
@@ -140,6 +139,11 @@
 					$stmt->execute($add_author_params);
 				}
 			}
+
+			$stmt = $db->prepare('UPDATE lib_publisher SET book_publisher = :book_publisher WHERE publisher_id = :publisher_id;');
+			$stmt->execute([':book_publisher' => $upd_book['publisher'],
+							':publisher_id' => $upd_book['publisher_id']]);
+
 			header("location: sostav.php");
 			die();
 		}
@@ -147,7 +151,7 @@
 	
 	if(isset($_POST['book']) && $is_admin){
 		$book = $_POST['book'];
-		if(empty($book['tittle']) || empty($book['price']) || empty($book['author']) || empty($book['publisher']) || !isset($_FILES['image']) || $_FILES['image']['error'] != UPLOAD_ERR_OK ){
+		if(empty($book['tittle']) || empty($book['price']) || empty($book['author']) || empty($book['year']) || empty($book['publisher']) || !isset($_FILES['image']) || $_FILES['image']['error'] != UPLOAD_ERR_OK ){
 			echo('<div style="color: red; text-align: center; background: yellow; padding: 8px; font-size: 18px;">Заполните все поля!</div>');
 		}
 		else{			
@@ -157,14 +161,31 @@
 				move_uploaded_file($_FILES['image']['tmp_name'],  $name);
 				unset($_FILES['image']);
 			}
-						
-			$add_book_sql = 'INSERT INTO lib_book (book_tittle, book_price, book_img, book_publisher) 
-								VALUES (:tittle, :price, :img, :publisher);';
+			$publisher_id = 0;
+
+			$stmt = $db->prepare('SELECT * FROM lib_publisher WHERE book_publisher = :publisher');
+			$stmt->execute([':publisher' => $book['publisher']]);
+
+			$publisher = $stmt->fetch(PDO::FETCH_ASSOC);
+			if(!empty($publisher)){
+				$publisher_id = $publisher['publisher_id'];
+			}
+			else{
+				$stmt = $db->prepare('INSERT INTO lib_publisher (book_publisher) VALUES (:publisher);');
+				$stmt->execute([':publisher' => $book['publisher']]);
+
+				$publisher_id = $db->lastInsertId();
+			}
+
+
+			$add_book_sql = 'INSERT INTO lib_book (book_tittle, book_price, book_img, book_year, publisher_id) 
+								VALUES (:tittle, :price, :img, :year, :publisher_id);';
 			
 			$add_book_params = [ ':tittle' => $book['tittle'], 
 									':price' => $book['price'], 
 									':img' => $name,
-									':publisher' => $book['publisher']
+									':year' =>  $book['year'],
+									':publisher_id' => $publisher_id
 								];
 			$stmt = $db->prepare($add_book_sql);
 			$stmt->execute($add_book_params);
@@ -246,6 +267,10 @@
 								<tr>
 									<td><b>Авторы: </b></td>
 									<td><input type="text" name="book[author]" placeholder="Через запятую"></td>
+								</tr>
+								<tr>
+									<td><b>Год: </b></td>
+									<td><input type="text" name="book[year]"></td>
 								</tr>
 								<tr>
 									<td><b>Издатель: </b></td>

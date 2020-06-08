@@ -58,7 +58,7 @@
 								$sql = 'SELECT * FROM lib_authors WHERE book_id = :book_id';
 								$stmt = $db->prepare($sql);
 
-								$view = $db->query("SELECT * FROM lib_book");
+								$view = $db->query("SELECT * FROM lib_book lb LEFT JOIN lib_publisher lp ON lb.publisher_id = lp.publisher_id");
 
 								foreach ($view as $tittle)
 								{	
@@ -69,7 +69,7 @@
 									{	
 										$info = $info.', '.$row['book_author'];
 									}
-									$info = $info.'<br>'.$tittle['book_publisher'];
+									$info = $info.'<br>Издатель: '.$tittle['book_publisher'] . ', ' . $tittle['book_year'];
 									$info = ltrim($info,  ",");
 
 									echo('<div class="lib-item">
