@@ -64,7 +64,8 @@
 
  							echo "<br><br>Меню:
  							  <br><a href='orders.php' class='button'> Заказы</a><br>
-							  <br><a href='book_controller.php' class='button'> Добавить книгу</a>
+							  <br><a href='book_controller.php' class='button'> Добавить книгу</a><br>
+							  <br><a href='authors.php' class='button'> Список авторов</a>
  							";
  						
  						}

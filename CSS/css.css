@@ -185,6 +185,13 @@ bor2{
   width: -webkit-fill-available;
 }
 
+/*Строка уведомлений*/
+#alertbox {
+	text-align: center;
+	padding: 8px;
+	font-size: 18px;
+	cursor: pointer;
+}
 /*форма редактирования*/
 #magnify {
 	display: none;

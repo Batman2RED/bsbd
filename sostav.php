@@ -55,32 +55,34 @@
  									$user = $stmt->fetch(PDO::FETCH_OBJ);
 								}
 
-								$sql = 'SELECT * FROM lib_authors WHERE book_id = :book_id';
+								$sql = 'SELECT author_lastname AS a_ln, SUBSTRING(author_firstname, 1, 1) AS a_fn, SUBSTRING(author_patronymic, 1, 1) AS a_pn
+											FROM lib_book_authors INNER JOIN lib_authors  USING (author_id) WHERE book_id = :book_id';
 								$stmt = $db->prepare($sql);
 
-								$view = $db->query("SELECT * FROM lib_book lb LEFT JOIN lib_publisher lp ON lb.publisher_id = lp.publisher_id");
+								$view = $db->query("SELECT book_id, book_tittle, book_price, book_img, book_year, book_publisher
+														FROM lib_book INNER JOIN lib_publisher USING (publisher_id);");
 
-								foreach ($view as $tittle)
+								foreach ($view as $book)
 								{	
-									$stmt->execute([':book_id' => $tittle['book_id'] ]);
+									$stmt->execute([':book_id' => $book['book_id'] ]);
 									$info = '';
 
     								while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 									{	
-										$info = $info.', '.$row['book_author'];
+										$info = $info.', '.$row['a_ln'].' '.$row['a_fn'].'. '.$row['a_pn'].'.';
 									}
-									$info = $info.'<br>Издатель: '.$tittle['book_publisher'] . ', ' . $tittle['book_year'];
+									$info = $info.'<br>Издатель: '.$book['book_publisher'] . ', ' . $book['book_year'];
 									$info = ltrim($info,  ",");
 
 									echo('<div class="lib-item">
-									  		<img src="'.$tittle['book_img'].'" height=20%>
+									  		<img src="'.$book['book_img'].'" height=20%>
 									  		<div class="product-composition">
-									  			<h3>'.$tittle['book_tittle'].'</h3>
+									  			<h3>'.$book['book_tittle'].'</h3>
 									  			<b>'.$info.'</b>');
 											if(isset($user->u_role) && $user->u_role == 'admin')
  											{
- 												echo('<br><br><b><a style="color:red; cursor: pointer;" act="edit" book_id="'.  $tittle['book_id'] .'">Редактировать</a></b>
-													  <br><b><a href=# style="color:red" act="del" book_id="'.  $tittle['book_id'] .'">Удалить</a></b>');
+ 												echo('<br><br><b><a style="color:red; cursor: pointer;" act="edit" book_id="'.  $book['book_id'] .'">Редактировать</a></b>
+													  <br><b><a href=# style="color:red" act="del" book_id="'.  $book['book_id'] .'">Удалить</a></b>');
  											}
 
 											echo('</div>
